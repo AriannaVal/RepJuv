@@ -30,6 +30,7 @@ samtools index sofia_sorted.bam
 
 
 GATK_PATH=/pico/scratch/userexternal/mfratell/SW/GATK38/
+PICARD_PATH=/pico/scratch/userexternal/mfratell/SW
 
 indels=/pico/scratch/userexternal/mfratell/GENOME/gatk_hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf
 dbSNP=/pico/scratch/userexternal/mfratell/GENOME/gatk_hg38/dbsnp150.vcf
