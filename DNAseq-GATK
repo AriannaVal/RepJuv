@@ -57,7 +57,7 @@ java -Djava.io.tmpdir=$java_temp -jar $PICARD_PATH/picard.jar MarkDuplicates INP
 
 # Re-index bam
 
-java -XX:ParallelGCThreads=20 -jar $PICARD_PATH/picard.jar BuildBamIndex INPUT=dedup_padre_bwa_sorted.bam
+java -Djava.io.tmpdir=$java_temp -jar $PICARD_PATH/picard.jar BuildBamIndex INPUT=dedup_sofia_bwa_sorted.bam
 
 
 
@@ -69,15 +69,16 @@ java -XX:ParallelGCThreads=20 -jar $PICARD_PATH/picard.jar BuildBamIndex INPUT=d
 
 # Replace read groups
 
-java -Xmx500g -XX:ParallelGCThreads=20 -jar /pico/scratch/userexternal/mfratell/SW/picard.jar AddOrReplaceReadGroups I=dedup_padre_bwa_sorted.bam O=dedup_padre_bwa_sorted_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=1
+java -Xmx500g -Djava.io.tmpdir=$java_temp -jar /pico/scratch/userexternal/mfratell/SW/picard.jar AddOrReplaceReadGroups I=dedup_sofia_bwa_sorted.bam O=dedup_sofia_bwa_sorted_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=1
 
-samtools index dedup_padre_bwa_sorted_RG.bam
+module load autoload samtools
+samtools index dedup_sofia_bwa_sorted_RG.bam
 
 
 
 # Recalibrate Bases
 
-java -Xmx500g -XX:ParallelGCThreads=20 -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRecalibrator -R $hg38_fasta -I dedup_padre_bwa_sorted_RG.bam -knownSites $dbSNP -knownSites $indels -o recal_data.table 
+java -Xmx500g -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRecalibrator -R $hg38_fasta -I dedup_sofia_bwa_sorted_RG.bam -knownSites $dbSNP -knownSites $indels -o recal_data.table 
 
 
 
@@ -113,7 +114,7 @@ java -Xmx500g -XX:ParallelGCThreads=20 -jar $GATK_PATH/GenomeAnalysisTK.jar -T B
 
 
 
-java -Xmx500g -XX:ParallelGCThreads=20  -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I padre_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
+java -Xmx500g -XX:ParallelGCThreads=20  -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I sofia_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
 
 
 
