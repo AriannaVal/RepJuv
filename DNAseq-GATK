@@ -78,13 +78,13 @@ samtools index dedup_sofia_bwa_sorted_RG.bam
 
 # Recalibrate Bases
 
-java -Xmx500g -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRecalibrator -R $hg38_fasta -I dedup_sofia_bwa_sorted_RG.bam -knownSites $dbSNP -knownSites $indels -o recal_data.table 
+java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRecalibrator -R $hg38_fasta -I dedup_sofia_bwa_sorted_RG.bam -knownSites $dbSNP -knownSites $indels -o recal_data.table 
 
 
 
 # Recalibrate Bases 2nd-pass
 
- java -Xmx500g -XX:ParallelGCThreads=20  -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRecalibrator -R $hg38_fasta -I dedup_padre_bwa_sorted_RG.bam -knownSites $dbSNP -knownSites $indels -BQSR recal_data.table -o post_recal_data.table 
+ java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRecalibrator -R $hg38_fasta -I dedup_sofia_bwa_sorted_RG.bam -knownSites $dbSNP -knownSites $indels -BQSR recal_data.table -o post_recal_data.table 
 
  
 
