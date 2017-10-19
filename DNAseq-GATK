@@ -1,5 +1,5 @@
 screen
-qsub -q bigem -I -l select=1:ncpus=20:mem=5100G,walltime=24:00:00 -A ELIX2_prj9
+qsub -q bigmem -I -l select=1:ncpus=20:mem=5100G,walltime=24:00:00 -A ELIX2_prj9
 
 
 #########   ALLINEAMNETO CON BWA ########
