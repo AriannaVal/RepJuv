@@ -1,6 +1,5 @@
 screen
-qsub -q bigmem -I -l select=1:ncpus=20:mem=510G,walltime=24:00:00 -A ELIX2_prj9
-
+qsub
 
 #########   ALLINEAMNETO CON BWA ########
 #########################################
@@ -15,6 +14,9 @@ hg38_fasta=/pico/scratch/userexternal/mfratell/GENOME/iGENOMES/Homo_sapiens/hg38
 
 
 bwa mem -M -R '@RG\tID:foo\tSM:bar' -t 20 $hg38_fasta $Fastq_R1 $Fastq_R2 > madre_bwa.sam
+
+# bwa mem -M -R '@RG\tID:group1\tSM:sample1\tPL:illumina\tLB:lib1\tPU:unit1' -t 20 $hg38_fasta $Fastq_R1 $Fastq_R2 > madre_bwa.sam
+
 
 # PER TUTTI I CAMPIONI
 
@@ -125,7 +127,7 @@ java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRec
 
 
 
-java   -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I sofia_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
+java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I sofia_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
 
 
 
