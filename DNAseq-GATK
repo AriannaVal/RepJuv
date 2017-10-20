@@ -127,7 +127,7 @@ java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRec
 
 
 
-java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I sofia_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
+java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I madre_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
 
 
 
