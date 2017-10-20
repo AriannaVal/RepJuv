@@ -1,5 +1,5 @@
 screen
-qsub -q bigmem -I -l select=1:ncpus=20:mem=5100G,walltime=24:00:00 -A ELIX2_prj9
+qsub -q bigmem -I -l select=1:ncpus=20:mem=510G,walltime=24:00:00 -A ELIX2_prj9
 
 
 #########   ALLINEAMNETO CON BWA ########
@@ -31,9 +31,17 @@ samtools view -bS -@ 20 sofia.sam | samtools sort -@ 20 -o sofia_sorted.bam
 samtools index sofia_sorted.bam
 
 
+# Load modules
+
+module load autoload bwa
+module load autoload gatk
+module load autoload r
+
 
 GATK_PATH=/pico/scratch/userexternal/mfratell/SW/GATK38/
 PICARD_PATH=/pico/scratch/userexternal/mfratell/SW
+java_temp=/pico/scratch/userexternal/mfratell/vallerga_temp
+
 
 indels=/pico/scratch/userexternal/mfratell/GENOME/gatk_hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf
 dbSNP=/pico/scratch/userexternal/mfratell/GENOME/gatk_hg38/dbsnp150.vcf
@@ -103,7 +111,7 @@ java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRec
 
  # removed options suchs as ParallelGCThreads and -Xmx to avoid SIGSEGV error
 
- java -jar $GATK_PATH/GenomeAnalysisTK.jar -T PrintReads -R $hg38_fasta -I dedup_padre_bwa_sorted_RG.bam -BQSR recal_data.table -o padre_recalled.bam 
+ java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T PrintReads -R $hg38_fasta -I dedup_madre_bwa_sorted_RG.bam -BQSR recal_data.table -o madre_recalled.bam 
 
   
 
@@ -117,7 +125,7 @@ java -Djava.io.tmpdir=$java_temp -jar $GATK_PATH/GenomeAnalysisTK.jar -T BaseRec
 
 
 
-java -Xmx500g -XX:ParallelGCThreads=20  -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I sofia_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
+java   -jar $GATK_PATH/GenomeAnalysisTK.jar -T HaplotypeCaller -R $hg38_fasta -I sofia_recalled.bam  --genotyping_mode DISCOVERY  -stand_call_conf 30 -o raw_variants.vcf 
 
 
 
