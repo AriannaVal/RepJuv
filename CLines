@@ -1,4 +1,4 @@
-
+fastqc -t $ncpus -o $qcDir ./fastq/MADRE_S2_R1_001.fastq
 qsub -q parallel -I -l select=1:ncpus=1,walltime=02:00:00 -A 
 
 bcl_dir=/pico/scratch/userexternal/mfratell/NGS_RUNS/bcl2fastq/bin
@@ -32,6 +32,6 @@ mkdir $qcDir
 #processarli in un unico job
 
 fastqc -t $ncpus -o $qcDir ./*.fastq
-
+fastqc -t $ncpus -o $qcDir ./fastq/MADRE_S2_R1_001.fastq
 
 
