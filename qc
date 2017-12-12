@@ -52,12 +52,10 @@ ls *.bam > bamlist.txt
 $Bamtools_DIR/bamtools stats -list bamlist.txt
 
 for i in $(cat bamlist.txt); do
-
             #echo item: $i
             newName="${i/_Aligned.sortedByCoord.out.bam/_resampled_01.bam}"
             #echo $newName
             samtools view -@ 20 -b -s 0.1 $i >$newName
-
 done
 
 
@@ -65,20 +63,17 @@ done
 # DO THIS FOR PAIRED-END
 
 for i in $(cat bamlist.txt); do
-
             #echo item: $i
             pdf="${i/_Aligned.sortedByCoord.out.bam/_report.html}"
             temp="${i/_Aligned.sortedByCoord.out.bam/}"
             dirOUT=./qmapQC/$temp
             echo $dirOUT
             $qualimap_DIR/qualimap bamqc -bam $i --feature-file $GTF -nt 20 -outdir $dirOUT  -outfile $pdf -outformat HTML -gd HUMAN
-
 done
 
 
 
 for i in $(cat bamlist.txt); do
-
             #echo item: $i
             pdf="${i/_Aligned.sortedByCoord.out.bam/_report.html}"
             temp="${i/_Aligned.sortedByCoord.out.bam/}"
@@ -98,7 +93,6 @@ ls *resampled*.bam > rebamlist.txt
 for i in $(cat rebamlist.txt); do
             samtools index $i
             echo $i
-
 done
 
 
@@ -111,24 +105,20 @@ for i in $(cat rebamlist.txt); do
             echo item: $i
             prefix=$i
             $RSeQC_DIR/geneBody_coverage.py -i $i -r $srefFile -o $prefix
-
 done
 
 
 
 for i in $(cat rebamlist.txt); do
-
             echo item: $i
             newName="${i/_resampled_01.bam/_read_distribution.txt}"
             #echo new: $newName
             $RSeQC_DIR/read_distribution.py -i $i -r $refFile > $newName
-
 done
 
 
 
 for i in $(cat rebamlist.txt); do
-
             echo item: $i
             newName="${i/_resampled_01.bam/_read_duplication.txt}"
             #echo new: $newName
