@@ -1,0 +1,51 @@
+
+
+## 1 -  DEMULTIPLEXING  ##
+
+bcl_dir=/marconi_scratch/userexternal/mfratell/NGS/RUN/bcl2fastq/bin
+ss_file=/marconi_scratch/userexternal/mfratell/NGS/BCK/*samplesheet*
+run_dir=/marconi_scratch/userexternal/mfratell/NGS/BCK/180314_NB501314_0076_AHNFLWBGX3
+
+$bcl_dir/bcl2fastq --sample-sheet $ss_file --runfolder-dir $run_dir --no-bgzf-compression --no-lane-splitting
+
+# i fastq sono salvati di default nella sottocartella
+/marconi_scratch/userexternal/mfratell/NGS/BCK/*cartellarun*/Data/Intensities/BaseCalls
+
+#decomprimere i files
+gunzip -d ./*.gz
+
+
+
+
+## 2 - QUALITY CONTROL ##
+
+module load profile/advanced
+module load fastqc
+
+# define VARIABLES
+
+ncpus=20
+fastqDir=./fastq
+qcDir=./QC  #ricordarsi di crearla
+mkdir $qcDir
+
+#processarli in un unico job
+fastqc -t $ncpus -o $qcDir ./*.fastq
+
+
+
+
+
+## 3 - ALLINEAMENTO  ##
+
+module load star
+
+GTF=/marconi_scratch/userexternal/mfratell/GENOME/GENCODE/v27/gencode.v27.annotation.gtf 
+GENOME_DIR=/marconi_scratch/userexternal/mfratell/GENOME/GENCODE/v27/star_GRCh38.p10
+ncpus=10
+
+Prefix=”ZR751_24H_A1_S10_001”
+FW_fastq=/pico/scratch/userexternal/mfratell/cell_lines/ZR751_24H_A1_S10_R1_001.fastq
+RV_fastq=/pico/scratch/userexternal/mfratell/cell_lines/ZR751_24H_A1_S10_R2_001.fastq
+
+STAR --runThreadN $ncpus --genomeDir $GENOME_DIR  --outFileNamePrefix $Prefix --readFilesIn $FW_fastq $RV_fastq  --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --twopassMode Basic  
