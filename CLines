@@ -1,5 +1,8 @@
 
 
+
+
+
 ## 1 -  DEMULTIPLEXING  ##
 
 bcl_dir=/marconi_scratch/userexternal/mfratell/SW/bcl2fastq/src/bin/bin
@@ -52,4 +55,9 @@ Prefix=”ZR751_24H_A1_S10_001”
 FW_fastq=/pico/scratch/userexternal/mfratell/cell_lines/ZR751_24H_A1_S10_R1_001.fastq
 RV_fastq=/pico/scratch/userexternal/mfratell/cell_lines/ZR751_24H_A1_S10_R2_001.fastq
 
-STAR --runThreadN $ncpus --genomeDir $GENOME_DIR  --outFileNamePrefix $Prefix --readFilesIn $FW_fastq $RV_fastq  --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --twopassMode Basic  
+STAR --runThreadN $ncpus --genomeDir $GENOME_DIR  --outFileNamePrefix $Prefix --readFilesIn $FW_fastq $RV_fastq  --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --twopassMode Basic 
+
+
+
+
+
