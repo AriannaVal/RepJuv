@@ -2,8 +2,8 @@
 
 ## 1 -  DEMULTIPLEXING  ##
 
-bcl_dir=/marconi_scratch/userexternal/mfratell/NGS/RUN/bcl2fastq/bin
-ss_file=/marconi_scratch/userexternal/mfratell/NGS/BCK/*samplesheet*
+bcl_dir=/marconi_scratch/userexternal/mfratell/SW/bcl2fastq/src/bin/bin
+ss_file=/marconi_scratch/userexternal/mfratell/NGS/BCK/samplesheet2.csv
 run_dir=/marconi_scratch/userexternal/mfratell/NGS/BCK/180314_NB501314_0076_AHNFLWBGX3
 
 $bcl_dir/bcl2fastq --sample-sheet $ss_file --runfolder-dir $run_dir --no-bgzf-compression --no-lane-splitting
@@ -15,7 +15,7 @@ $bcl_dir/bcl2fastq --sample-sheet $ss_file --runfolder-dir $run_dir --no-bgzf-co
 gunzip -d ./*.gz
 
 
-
+awk '{ gsub(/\xef\xbb\xbf/,""); print }' INFILE > OUTFILE
 
 ## 2 - QUALITY CONTROL ##
 
