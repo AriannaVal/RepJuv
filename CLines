@@ -15,7 +15,12 @@ $bcl_dir/bcl2fastq --sample-sheet $ss_file --runfolder-dir $run_dir --no-bgzf-co
 gunzip -d ./*.gz
 
 
+sed 's/;/,/g' samplesheet_2.csv > samplesheet_virgola.csv
 awk '{ gsub(/\xef\xbb\xbf/,""); print }' INFILE > OUTFILE
+
+
+
+
 
 ## 2 - QUALITY CONTROL ##
 
@@ -23,7 +28,6 @@ module load profile/advanced
 module load fastqc
 
 # define VARIABLES
-
 ncpus=20
 fastqDir=./fastq
 qcDir=./QC  #ricordarsi di crearla
