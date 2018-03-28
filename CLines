@@ -24,8 +24,8 @@ awk '{ gsub(/\xef\xbb\xbf/,""); print }' INFILE > OUTFILE
 
 ## 2 - QUALITY CONTROL ##
 
-module load profile/advanced
-module load fastqc
+module load profile/bioinf
+module load autoload fastqc
 
 # define VARIABLES
 ncpus=20
