@@ -1,0 +1,22 @@
+
+FC_DIR=/marconi_scratch/userexternal/mfratell/SW/subread-1.6.1-Linux-x86_64/bin
+GTF=/marconi_scratch/userexternal/mfratell/EG/ATRAVIRUS/repeats.gtf
+ncpus=36
+
+
+OUTPUT=CAMA1_8H_AD3.VCount
+INPUT=/marconi_scratch/userexternal/mfratell/EG/ATRAVIRUS/BAM/8H/HCC1599_8H_AD3_S6_001_Aligned.sortedByCoord.out.bam
+
+
+$FC_DIR/featureCounts --verbose  -T $ncpus -t exon -f -a $GTF -s 2 -p -o $OUTPUT $INPUT
+
+
+
+# -f # exon quantification
+# -M # include multi mappers  # --fraction include fraction reads
+# -p # paired end
+
+# -s <int> 0 unstranded
+# -s <int> 1 stranded
+# -s <int> 2 reversely stranded
+
