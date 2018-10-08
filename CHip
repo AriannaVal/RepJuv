@@ -1,0 +1,34 @@
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+cd $WK_DIR
+
+FASTQ_DUMP_DIR=/gpfs/scratch/userexternal/mfratell/SW/sratoolkit.2.9.2-centos_linux64/bin
+
+
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542281 > SRR1542281.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542282 > SRR1542282.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542275 > SRR1542275.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542274 > SRR1542274.fastq
+
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542277 > SRR1542277.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542276 > SRR1542276.fastq
+
+SRR1542277   RARa_pBox_BiotinChIPseq_Dox_RA_E2_Exp2
+SRR1542276   RARa_ZF_BiotinChIPseq_Dox_RA_E2_Exp2
+
+
+# ALIGNMENT STEP
+
+srun -N 1 -n 36 -A ELIX3_Fratelli --partition=gll_usr_prod --mem=0 --time 24:00:00 --pty /bin/bash
+
+module load profile/bioinf
+module load autoload bwa
+
+INPUT=ERR700056.fastq
+
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+cd $WK_DIR
+OUTPUT=${INPUT7.fastq/.bam}
+refGenome=/gpfs/scratch/userexternal/mfratell/GENOME/iGENOMES/Homo_sapiens/hg38/Sequence/BWAIndex/genome.fa
+ncpus =36
+
+bwa -mem -t $ncpus $refGenome $INPUT > $OUTPUT
