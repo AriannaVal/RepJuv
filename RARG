@@ -1,0 +1,58 @@
+
+### DATA DOWNLOAD ###
+
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+cd $WK_DIR
+
+FASTQ_DUMP_DIR=/gpfs/scratch/userexternal/mfratell/SW/sratoolkit.2.9.2-centos_linux64/bin
+
+
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542278 > SRR1542278.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542279 > SRR1542279.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542280 > SRR1542280.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542283 > SRR1542283.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542284 > SRR1542284.fastq
+
+
+
+#### ALIGNMENT STEP ###
+
+srun -N 1 -n 36 -A ELIX3_Fratelli --partition=gll_usr_prod --mem=0 --time 24:00:00 --pty /bin/bash
+
+module load profile/bioinf
+module load autoload bwa
+
+INPUT=SRR1542275.fastq
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+cd $WK_DIR
+OUTPUT=${INPUT/.fastq/.bam}
+refGenome=/gpfs/scratch/userexternal/mfratell/GENOME/iGENOMES/Homo_sapiens/hg38/Sequence/BWAIndex/genome.fa
+ncpus=36
+bwa mem -t $ncpus $refGenome $INPUT > $OUTPUT
+
+INPUT=ERR700056.fastq
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+cd $WK_DIR
+OUTPUT=${INPUT/.fastq/.bam}
+refGenome=/gpfs/scratch/userexternal/mfratell/GENOME/iGENOMES/Homo_sapiens/hg38/Sequence/BWAIndex/genome.fa
+ncpus=36
+bwa -mem -t $ncpus $refGenome $INPUT > $OUTPUT
+
+
+### FILTER DUPLICATES AND CONVERT TO BED ###
+
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+cd $WK_DIR
+BAMFILE=SRR1542284.bam
+BEDFILE=${BAMFILE/.bam/.dedup.bed}
+/gpfs/scratch/userexternal/mfratell/SW/MACS/bin/macs2 filterdup -i $BAMFILE --keep-dup=1 -o $BEDFILE
+
+
+### PEAK CALLING ###
+
+ID=SRR1542284
+TRACK=SRR1542284.dedup.bed
+INPUT=ERR700056.dedup.bed
+
+/gpfs/scratch/userexternal/mfratell/SW/MACS/bin/macs2 callpeak -t $TRACK -c $INPUT -f BED -g 2.9e9 -n $ID -B -q 0.01
+#macs2 callpeak -t $TRACK -c $INPUT --broad -f BAM -g 2.9e9 -n $ID -B -q 0.01
