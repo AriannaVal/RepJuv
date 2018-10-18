@@ -1,7 +1,7 @@
 
 ### DATA DOWNLOAD ###
 
-WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_161018
 cd $WK_DIR
 
 FASTQ_DUMP_DIR=/gpfs/scratch/userexternal/mfratell/SW/sratoolkit.2.9.2-centos_linux64/bin
@@ -14,50 +14,62 @@ $FASTQ_DUMP_DIR/fastq-dump -Z SRR1542274 > SRR1542274.fastq
 $FASTQ_DUMP_DIR/fastq-dump -Z SRR1542277 > SRR1542277.fastq
 $FASTQ_DUMP_DIR/fastq-dump -Z SRR1542276 > SRR1542276.fastq
 
-SRR1542277   RARa_pBox_BiotinChIPseq_Dox_RA_E2_Exp2
-SRR1542276   RARa_ZF_BiotinChIPseq_Dox_RA_E2_Exp2
+
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542278 > SRR1542278.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542279 > SRR1542279.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542280 > SRR1542280.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542283 > SRR1542283.fastq
+$FASTQ_DUMP_DIR/fastq-dump -Z SRR1542284 > SRR1542284.fastq
 
 
-#### ALIGNMENT STEP ###
+
+
+#### ALIGNMENT STEP ###########################################################
 
 srun -N 1 -n 36 -A ELIX3_Fratelli --partition=gll_usr_prod --mem=0 --time 24:00:00 --pty /bin/bash
 
 module load profile/bioinf
 module load autoload bwa
 
-INPUT=SRR1542277.fastq
-WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+INPUT=SRR1542284.fastq
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_161018
 cd $WK_DIR
 OUTPUT=${INPUT/.fastq/.bam}
 refGenome=/gpfs/scratch/userexternal/mfratell/GENOME/iGENOMES/Homo_sapiens/hg38/Sequence/BWAIndex/genome.fa
 ncpus=36
 bwa mem -t $ncpus $refGenome $INPUT > $OUTPUT
 
-INPUT=ERR700056.fastq
-WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+INPUT=ERR700055.fastq
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_161018
 cd $WK_DIR
 OUTPUT=${INPUT/.fastq/.bam}
 refGenome=/gpfs/scratch/userexternal/mfratell/GENOME/iGENOMES/Homo_sapiens/hg38/Sequence/BWAIndex/genome.fa
 ncpus=36
-bwa -mem -t $ncpus $refGenome $INPUT > $OUTPUT
+bwa mem -t $ncpus $refGenome $INPUT > $OUTPUT
 
 
-### FILTER DUPLICATES AND CONVERT TO BED ###
 
-WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_CHIP
+
+### FILTER DUPLICATES AND CONVERT TO BED ########################################
+
+WK_DIR=/gpfs/scratch/userexternal/mfratell/CHIPseq/MCF7_161018
 cd $WK_DIR
-BAMFILE=SRR1542274.bam
+BAMFILE=SRR1542284.bam
 BEDFILE=${BAMFILE/.bam/.dedup.bed}
 /gpfs/scratch/userexternal/mfratell/SW/MACS/bin/macs2 filterdup -i $BAMFILE --keep-dup=1 -o $BEDFILE
 
 
-### PEAK CALLING ###
 
-ID=SRR1542277
-TRACK=SRR1542277.dedup.bed
-INPUT=ERR700056.dedup.bed
+
+
+### PEAK CALLING ################################################################
+
+ID=SRR1542284
+TRACK=SRR1542284.dedup.bed
+INPUT=ERR700055.dedup.bed
 
 /gpfs/scratch/userexternal/mfratell/SW/MACS/bin/macs2 callpeak -t $TRACK -c $INPUT -f BED -g 2.9e9 -n $ID -B -q 0.01
+
 #macs2 callpeak -t $TRACK -c $INPUT --broad -f BAM -g 2.9e9 -n $ID -B -q 0.01
 
 
