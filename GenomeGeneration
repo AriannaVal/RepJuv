@@ -7,3 +7,7 @@ GENOME_fasta=/gpfs/scratch/userexternal/mfratell/GENOME/GENCODE/GRCm38.primary_a
 GTF=/gpfs/scratch/userexternal/mfratell/GENOME/GENCODE/gencode.vM19.annotation.gtf
 
 $STAR_DIR/STAR --runThreadN NumberOfThreads --runMode genomeGenerate --genomeDir $GENOME_DIR --genomeFastaFiles $GENOME_fasta --sjdbGTFfile $GTF --sjdbOverhang 100
+
+
+
+
