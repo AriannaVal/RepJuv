@@ -1,0 +1,9 @@
+
+
+STAR_DIR=STAR_DIR=/gpfs/scratch/userexternal/mfratell/SW/STAR-2.6.1c/bin/Linux_x86_64
+
+GENOME_DIR=/gpfs/scratch/userexternal/mfratell/GENOME/GENCODE/M19
+GENOME_fasta=/gpfs/scratch/userexternal/mfratell/GENOME/GENCODE/GRCm38.primary_assembly.genome.fa
+GTF=/gpfs/scratch/userexternal/mfratell/GENOME/GENCODE/gencode.vM19.annotation.gtf
+
+$STAR_DIR/STAR --runThreadN NumberOfThreads --runMode genomeGenerate --genomeDir $GENOME_DIR --genomeFastaFiles $GENOME_fasta --sjdbGTFfile $GTF --sjdbOverhang 100
